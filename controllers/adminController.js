@@ -9,7 +9,6 @@ import {
 } from "../errors/index.js";
 
 const generateCoupon = async (req, res) => {
-  //   res.send("coupon generated");
   if (req.user.userId !== process.env.ADMIN_ID)
     throw new BadRequestError("You are not authorized to perform this action");
   const { userAccount, amount } = req.body;
@@ -28,7 +27,6 @@ const generateCoupon = async (req, res) => {
     couponCode: `${couponCode[0]}`,
     couponOwner: userAccount,
     amount: amount,
-    isUsed: false,
   });
   const savedCoupon = await newCoupon.save();
   return res.status(200).json(savedCoupon);

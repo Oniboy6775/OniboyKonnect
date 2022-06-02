@@ -2,7 +2,6 @@ import { v4 } from "uuid";
 import Transaction from "../models/Transaction.js";
 const receipt = async (payload) => {
   const {
-    id,
     planNetwork,
     planAmount,
     transType,
@@ -11,6 +10,7 @@ const receipt = async (payload) => {
     amountToCharge,
     userBalance,
     userId,
+    increaseBalance,
   } = payload;
   const newTransaction = Transaction({
     transId: v4(),
@@ -20,7 +20,9 @@ const receipt = async (payload) => {
     transNumber: phoneNumber,
     transAmount: amountToCharge,
     balanceBefore: userBalance,
-    balanceAfter: userBalance - amountToCharge,
+    balanceAfter: increaseBalance
+      ? userBalance + amountToCharge
+      : userBalance - amountToCharge,
     transDate: `${new Date().toDateString()} ${new Date().toLocaleTimeString()}`,
     transStatus: tranStatus,
     // createdAt: Date.now(),

@@ -22,6 +22,7 @@ import authRouter from "./routes/authRoutes.js";
 import jobsRouter from "./routes/jobsRoutes.js";
 import purchaseRouter from "./routes/purchaseRoutes.js";
 import adminRouter from "./routes/adminRoutes.js";
+import fundwalletRouter from "./routes/fundwalletRoutes.js";
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
@@ -43,6 +44,7 @@ app.use(xss());
 app.use(mongoSanitize());
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/fundwallet", authenticateUser, fundwalletRouter);
 app.use("/api/v1/purchase", authenticateUser, purchaseRouter);
 app.use("/api/v1/admin", authenticateUser, adminRouter);
 app.use("/api/v1/jobs", authenticateUser, jobsRouter);

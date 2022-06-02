@@ -2,11 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import User from "../models/User.js";
 import Transaction from "../models/Transaction.js";
 import Receipt from "../TransactionReceipt/receipt.js";
-import {
-  BadRequestError,
-  NotFoundError,
-  UnAuthenticatedError,
-} from "../errors/index.js";
+import { BadRequestError } from "../errors/index.js";
 import { BUY_AIRTIME } from "../apiCalls/index.js";
 const buyAirtime = async (req, res) => {
   const { amount, phoneNumber, network } = req.body;
@@ -33,7 +29,7 @@ const buyAirtime = async (req, res) => {
   //   CHARGING THE USER
   await User.updateOne({ _id: userId }, { $inc: { balance: -amountToCharge } });
   //   DATA_RELOADED API CALL
-  await BUY_AIRTIME(phoneNumber, amount);
+  await BUY_AIRTIME(phoneNumber, amount, network);
   //   RECEIPT
   const airtimeReceipt = await Receipt({
     planNetwork: NETWORK,
