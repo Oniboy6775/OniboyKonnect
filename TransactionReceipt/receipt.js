@@ -23,7 +23,7 @@ const receipt = async (payload) => {
     balanceAfter: increaseBalance
       ? userBalance + amountToCharge
       : userBalance - amountToCharge,
-    transDate: `${new Date().toDateString()} ${new Date().toLocaleTimeString()}`,
+    transDate: Date.now(),
     transStatus: tranStatus,
     // createdAt: Date.now(),
   });

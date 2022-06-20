@@ -29,10 +29,7 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  userPin: {
-    type: String,
-    required: [true, "set a transaction pin"],
-  },
+
   userType: {
     type: String,
     default: "smart earner",
@@ -51,12 +48,6 @@ UserSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-UserSchema.pre("save", async function () {
-  if (!this.isModified("userPin")) return;
-  const salt = await bcrypt.genSalt(10);
-  this.userPin = await bcrypt.hash(this.userPin, salt);
-});
-
 UserSchema.methods.createJWT = function () {
   return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_LIFETIME,
@@ -65,11 +56,6 @@ UserSchema.methods.createJWT = function () {
 
 UserSchema.methods.comparePassword = async function (candidatePassword) {
   const isMatch = await bcrypt.compare(candidatePassword, this.password);
-  return isMatch;
-};
-
-UserSchema.methods.compareUserPin = async function (userPin) {
-  const isMatch = await bcrypt.compare(userPin, this.userPin);
   return isMatch;
 };
 

@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Wrapper = styled.aside`
   @media (min-width: 992px) {
@@ -21,14 +21,17 @@ const Wrapper = styled.aside`
   }
   .content {
     background: var(--white);
+    /* border: 2px solid red; */
     width: var(--fluid-width);
     height: 95vh;
+    /* min-height: ; */
     border-radius: var(--borderRadius);
     padding: 4rem 2rem;
     position: relative;
     display: flex;
     align-items: center;
     flex-direction: column;
+    /* overflow-y: scroll; */
   }
   .close-btn {
     position: absolute;
@@ -44,6 +47,7 @@ const Wrapper = styled.aside`
     padding-top: 2rem;
     display: flex;
     flex-direction: column;
+    /* border: 2px solid red; */
   }
   .nav-link {
     display: flex;
@@ -72,5 +76,5 @@ const Wrapper = styled.aside`
   .active .icon {
     color: var(--primary-500);
   }
-`
-export default Wrapper
+`;
+export default Wrapper;

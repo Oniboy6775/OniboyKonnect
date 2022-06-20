@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Wrapper = styled.nav`
   height: var(--nav-height);
@@ -63,7 +63,7 @@ const Wrapper = styled.nav`
     cursor: pointer;
   }
   .logo-text {
-    display: none;
+    /* display: none; */
     margin: 0;
   }
   @media (min-width: 992px) {
@@ -77,8 +77,8 @@ const Wrapper = styled.nav`
       display: none;
     }
     .logo-text {
-      display: block;
+      /* display: block; */
     }
   }
-`
-export default Wrapper
+`;
+export default Wrapper;
