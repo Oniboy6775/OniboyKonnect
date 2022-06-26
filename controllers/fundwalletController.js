@@ -52,13 +52,11 @@ const coupon = async (req, res) => {
 const monnify = async (req, res) => {
   res.sendStatus(StatusCodes.OK);
   const stringifiedBody = JSON.stringify(req.body);
-  // const computedHash = hmac(process.env.MONNIFY_API_SECRET, stringifiedBody);
   const computedHash = sha512.hmac(
     process.env.MONNIFY_API_SECRET,
     stringifiedBody
   );
   const monnifySignature = req.headers["monnify-signature"];
-
   if (!monnifySignature) console.log("No monnify signature");
   if (monnifySignature != computedHash) console.log("computed hash not equal");
 
@@ -69,10 +67,11 @@ const monnify = async (req, res) => {
       customer: { name, email },
     },
   } = req.body;
-  if (eventType !== "SUCCESSFUL_TRANSACTION") return;
+  if (eventType !== "SUCCESSFUL_TRANSACTION")
+    console.log("transaction not successful");
   let user = await User.findOne({ email });
 
-  if (!user) return;
+  if (!user) console.log("no user with the account");
   const { _id, userBalance, userName } = user;
   await User.updateOne({ _id }, { $inc: { userBalance: settlementAmount } });
   await Receipt({
@@ -86,5 +85,6 @@ const monnify = async (req, res) => {
     userId: user._id,
     increaseBalance: true,
   });
+  console.log("account funded successful");
 };
 export { coupon, monnify };
