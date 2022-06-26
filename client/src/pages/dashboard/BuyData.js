@@ -3,7 +3,6 @@ import { useAppContext } from "../../context/appContext";
 // import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 
 const BuyData = () => {
   const {
@@ -41,10 +40,10 @@ const BuyData = () => {
       return;
     }
 
-    // if (user.userBalance < amount) {
-    //   displayAlert("Insufficient balance");
-    //   return;
-    // }
+    if (user.userBalance < amount) {
+      displayAlert("Insufficient balance");
+      return;
+    }
     buyData();
   };
   const currentDataOptions = dataOptions.filter(

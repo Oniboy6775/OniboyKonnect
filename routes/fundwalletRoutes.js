@@ -1,5 +1,7 @@
 import express from "express";
-import { coupon } from "../controllers/fundwalletController.js";
+import { coupon, monnify } from "../controllers/fundwalletController.js";
+import auth from "../middleware/auth.js";
 const router = express.Router();
-router.post("/coupon", coupon);
+router.post("/coupon", auth, coupon);
+router.post("/monnify", monnify);
 export default router;

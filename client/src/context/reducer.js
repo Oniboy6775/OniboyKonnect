@@ -72,6 +72,7 @@ const reducer = (state, action) => {
       isLoading: false,
       token: action.payload.token,
       user: action.payload.user,
+      isAdmin: action.payload.isAdmin,
       dataSubscriptions: action.payload.dataSubscriptions,
       transactions: action.payload.transactions,
       jobLocation: action.payload.location,
@@ -106,6 +107,7 @@ const reducer = (state, action) => {
       isLoading: false,
       token: action.payload.token,
       user: action.payload.user,
+      isAdmin: action.payload.isAdmin,
       dataSubscriptions: action.payload.dataSubscriptions,
       transactions: action.payload.transactions,
       dataOptions: dataSubscriptions.map(

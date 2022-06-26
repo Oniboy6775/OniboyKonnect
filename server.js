@@ -44,7 +44,7 @@ app.use(xss());
 app.use(mongoSanitize());
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/fundwallet", authenticateUser, fundwalletRouter);
+app.use("/api/v1/fundwallet", fundwalletRouter);
 app.use("/api/v1/purchase", authenticateUser, purchaseRouter);
 app.use("/api/v1/admin", authenticateUser, adminRouter);
 app.use("/api/v1/jobs", authenticateUser, jobsRouter);

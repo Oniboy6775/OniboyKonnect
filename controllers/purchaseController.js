@@ -29,9 +29,9 @@ const buyAirtime = async (req, res) => {
     throw new BadRequestError("Insufficient fund");
   }
   let NETWORK = "";
-  if (networkId == "1") NETWORK = "AIRTEL";
-  if (networkId == "2") NETWORK = "MTN";
-  if (networkId == "3") NETWORK = "GLO";
+  if (networkId == "1") NETWORK = "MTN";
+  if (networkId == "2") NETWORK = "GLO";
+  if (networkId == "3") NETWORK = "AIRTEL";
   if (networkId == "4") NETWORK = "9MOBILE";
   //   CHARGING THE USER
   await User.updateOne(

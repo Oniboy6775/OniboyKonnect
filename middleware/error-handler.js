@@ -13,6 +13,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
       .join(",");
   }
   if (err.isAxiosError) {
+    // console.log(err);
     defaultError.statusCode = StatusCodes.BAD_REQUEST;
     defaultError.msg = "Transaction failed(axios)";
   }

@@ -1,10 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaCopy } from "react-icons/fa";
+import { ImCheckmark } from "react-icons/im";
 import { useAppContext } from "../../context/appContext";
+import { Alert, FormRow, Loading } from "../../components";
 const FundWallet = () => {
-  const { user } = useAppContext();
+  const { user, userBalance, showAlert, isLoading, handleChange } =
+    useAppContext();
   const [activeButton, setActiveButton] = useState(1);
+  // const amountToBeCredited = amount - amount * 0.015;
+  const [config, setConfig] = useState({
+    amount: 0,
+    paymentInitiated: false,
+  });
+  const [isCopied, setIsCopied] = useState(false);
+  const handleFundWalletChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    handleChange({ name, value });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+  const copy = (text) => {
+    navigator.clipboard.writeText(text);
+    setIsCopied(true);
+  };
+  useEffect(() => {
+    // if (isCopied) setIsCopied(false);
+    setTimeout(() => setIsCopied(false), [2000]);
+  }, [isCopied]);
   const ReservedAccount = () => (
     <section className="reserved__account__container ">
       <small className="info">
@@ -13,24 +38,77 @@ const FundWallet = () => {
       </small>
       <div className="row">
         <div className="card">
-          <h3 className="title">Wema bank</h3>
+          <h3 className="title">{user.reservedAccBank}</h3>
           <div className="title-underline"></div>
           <p>
-            0878928329 <FaCopy />
+            {user.reservedAccNo}{" "}
+            {isCopied ? (
+              <ImCheckmark />
+            ) : (
+              <FaCopy onClick={() => copy(user.reservedAccNo)} />
+            )}
           </p>
-          <div className="title">Oniboy</div>
+          <div className="title">OniboyKonnect-{user.userName}</div>
         </div>
         <div className="card">
-          <h3 className="title">Rolex bank</h3>
+          <h3 className="title">{user.reservedAccBank2}</h3>
           <div className="title-underline"></div>
           <p>
-            9839392329 <FaCopy />
+            {user.reservedAccNo2}
+            {isCopied ? (
+              <ImCheckmark />
+            ) : (
+              <FaCopy onClick={() => copy(user.reservedAccNo2)} />
+            )}
           </p>
-          <p>DataReloaded-{user?.userName}</p>
+          <p>OniboyKonnect-{user?.userName}</p>
         </div>
       </div>
     </section>
   );
+
+  const AtmDeposit = () => (
+    <form className="form" onSubmit={handleSubmit}>
+      <h3 className="title">Flutterwave</h3>
+      {showAlert && <Alert />}
+      <div className="form-center">
+        {/* <FormRow
+          labelText="amount"
+          type="number"
+          name="amount"
+          value={amount}
+          handleChange={handleFundWalletChange}
+        />
+
+        <FormRow
+          disabled
+          type="number"
+          labelText="You will be credited"
+          name="amountToCharge"
+          value={amountToBeCredited}
+          handleChange={handleFundWalletChange}
+        /> */}
+        {/* <div className="form-row">
+          <label htmlFor="" className="form-label">
+            Amount
+          </label>
+          <input
+            type="text"
+            className="form-input"
+            value={config.amount}
+            onChange={(e) => setConfig({ ...config, amount: e.target.value })}
+          />
+        </div> */}
+
+        {/* <button className="btn btn-block" type="submit" disabled={isLoading}>
+          {isLoading ? "Please Wait..." : "Pay now"}
+        </button> */}
+        <h1 className="title">coming soon....</h1>
+      </div>
+      {isLoading && <Loading center />}
+    </form>
+  );
+
   const DirectDeposit = () => (
     <section className="direct__deposit">
       <small className="info">
@@ -46,6 +124,7 @@ const FundWallet = () => {
       </div>
     </section>
   );
+
   const paymentMethods = [
     { id: 1, name: "Reserved account" },
     { id: 2, name: "atm/bank transfer" },
@@ -67,6 +146,7 @@ const FundWallet = () => {
         ))}
       </div>
       {activeButton === 1 && <ReservedAccount />}
+      {activeButton === 2 && <AtmDeposit />}
       {activeButton === 3 && <DirectDeposit />}
     </Container>
   );
@@ -75,10 +155,10 @@ const FundWallet = () => {
 export default FundWallet;
 const Container = styled.div`
   background-color: var(--white);
-  padding: 1rem;
+
+  padding: 0 1rem;
   text-align: center;
-  /* border: 2px solid red; */
-  /* min-height: 100%; */
+
   .btn-block {
     margin-bottom: 0.5rem;
   }

@@ -6,6 +6,8 @@ import { BadRequestError } from "../errors/index.js";
 
 //modules
 import { StatusCodes } from "http-status-codes";
+import { sha512 } from "js-sha512";
+import crypto from "crypto";
 
 // others
 import Receipt from "../TransactionReceipt/receipt.js";
@@ -47,4 +49,43 @@ const coupon = async (req, res) => {
     receipt: receipt,
   });
 };
-export { coupon };
+const monnify = async (req, res) => {
+  res.sendStatus(StatusCodes.OK);
+  const stringifiedBody = JSON.stringify(req.body);
+  // const computedHash = hmac(process.env.MONNIFY_API_SECRET, stringifiedBody);
+  const computedHash = sha512.hmac(
+    process.env.MONNIFY_API_SECRET,
+    stringifiedBody
+  );
+  const monnifySignature = req.headers["monnify-signature"];
+
+  if (!monnifySignature) throw new BadRequestError("something is wrong 1");
+  if (monnifySignature != computedHash)
+    throw new BadRequestError("something is wrong 2");
+
+  const {
+    eventType,
+    eventData: {
+      settlementAmount,
+      customer: { name, email },
+    },
+  } = req.body;
+  if (eventType !== "SUCCESSFUL_TRANSACTION") return;
+  let user = await User.findOne({ email });
+
+  if (!user) return;
+  const { _id, userBalance, userName } = user;
+  await User.updateOne({ _id }, { $inc: { userBalance: settlementAmount } });
+  await Receipt({
+    planNetwork: "Auto-funding-SUCCESS||MNFY",
+    planAmount: settlementAmount,
+    transType: "wallet",
+    tranStatus: "success",
+    phoneNumber: userName,
+    amountToCharge: settlementAmount,
+    userBalance: user.userBalance,
+    userId: user._id,
+    increaseBalance: true,
+  });
+};
+export { coupon, monnify };

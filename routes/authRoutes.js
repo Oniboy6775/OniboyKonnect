@@ -13,11 +13,15 @@ import {
   login,
   updateUser,
   fetchUser,
+  forgetPassword,
+  resetPassword,
 } from "../controllers/authController.js";
 import authenticateUser from "../middleware/auth.js";
 router.route("/").get(authenticateUser, fetchUser);
 router.route("/register").post(register);
 router.route("/login").post(login);
+router.route("/forgetPassword").post(forgetPassword);
+router.route("/resetPassword").post(resetPassword);
 router.route("/updateUser").patch(authenticateUser, updateUser);
 
 export default router;

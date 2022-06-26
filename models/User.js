@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 20,
     trim: true,
+    lowercase: true,
   },
   email: {
     type: String,
@@ -18,6 +19,7 @@ const UserSchema = new mongoose.Schema({
       message: "Please provide a valid email",
     },
     unique: true,
+    lowercase: true,
   },
   password: {
     type: String,
@@ -36,6 +38,10 @@ const UserSchema = new mongoose.Schema({
     enum: ["smart earner", "reseller", "api user"],
   },
   referredBy: { type: String, lowercase: true },
+  reservedAccNo: { type: String },
+  reservedAccNo2: { type: String },
+  reservedAccBank: { type: String },
+  reservedAccBank2: { type: String },
   apiKey: {
     type: String,
   },

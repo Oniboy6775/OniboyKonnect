@@ -15,16 +15,14 @@ const Navbar = () => {
           <FaAlignLeft />
         </button>
         <div>
-          {/* <Logo /> */}
-          <h3 className="logo-text">
-            {isAdmin ? (
-              <button className="btn " onClick={() => Navigate("/admin")}>
-                Admin
-              </button>
-            ) : (
-              `₦${user?.userBalance}`
-            )}
-          </h3>
+          {isAdmin ? (
+            <button className="btn " onClick={() => Navigate("/admin")}>
+              Admin
+            </button>
+          ) : (
+            <Logo />
+            // <h3 className="logo-text">`₦${user?.userBalance}`</h3>
+          )}
         </div>
         <div className="btn-container">
           <button

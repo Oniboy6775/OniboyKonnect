@@ -40,6 +40,7 @@ import {
   CLEAR_FILTERS,
   CHANGE_PAGE,
 } from "./actions";
+import { useNavigate } from "react-router-dom";
 
 const token = localStorage.getItem("token");
 const user = localStorage.getItem("user");
@@ -62,9 +63,9 @@ const initialState = {
   dataOptions: [],
   selectedDataPlan: "",
   transactions: [],
-
+  amountToCharge: 0,
   airtimeDiscount: 98,
-  isAdmin: true,
+  isAdmin: false,
   // end here
   userLocation: userLocation || "",
   isEditing: false,
@@ -155,10 +156,18 @@ const AppProvider = ({ children }) => {
         currentUser
       );
 
-      const { user, token, dataSubscriptions, transactions } = data;
+      const { user, token, dataSubscriptions, transactions, isAdmin } = data;
+
       dispatch({
         type: SETUP_USER_SUCCESS,
-        payload: { user, token, alertText, dataSubscriptions, transactions },
+        payload: {
+          user,
+          token,
+          alertText,
+          dataSubscriptions,
+          transactions,
+          isAdmin,
+        },
       });
       addUserToLocalStorage({ user, token });
     } catch (error) {
@@ -176,10 +185,10 @@ const AppProvider = ({ children }) => {
     dispatch({ type: FETCH_USER_BEGIN });
     try {
       const { data } = await authFetch.get("/auth/");
-      const { user, token, dataSubscriptions, transactions } = data;
+      const { user, token, dataSubscriptions, transactions, isAdmin } = data;
       dispatch({
         type: FETCH_USER_SUCCESS,
-        payload: { user, token, dataSubscriptions, transactions },
+        payload: { user, token, dataSubscriptions, transactions, isAdmin },
       });
       // dispatch({
       //   type: SETUP_USER_SUCCESS,
@@ -230,13 +239,7 @@ const AppProvider = ({ children }) => {
   };
   const buyData = async () => {
     dispatch({ type: BUY_DATA_BEGIN });
-    const {
-      network,
-      phoneNumber,
-
-      selectedDataPlan,
-      dataSubscriptions,
-    } = state;
+    const { network, phoneNumber, selectedDataPlan, dataSubscriptions } = state;
     let networkId;
     if (network === "MTN") networkId = "1";
     if (network === "GLO") networkId = "2";

@@ -38,10 +38,10 @@ const BuyAirtime = () => {
       displayAlert("Enter a valid number");
       return;
     }
-    if (amount < 100) {
-      displayAlert("Minimum purchase is ₦100 ");
-      return;
-    }
+    // if (amount < 100) {
+    //   displayAlert("Minimum purchase is ₦100 ");
+    //   return;
+    // }
     if (user.userBalance < amountToCharge) {
       displayAlert("Insufficient balance");
       return;

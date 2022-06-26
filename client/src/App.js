@@ -5,15 +5,15 @@ import {
   AllJobs,
   Profile,
   SharedLayout,
-  Stats,
   AddJob,
   BuyData,
   BuyAirtime,
   Electricity,
   FundWallet,
   TvSub,
+  Dashboard,
 } from "./pages/dashboard";
-import { Admin, MyUsers } from "./pages/admin";
+import { Admin } from "./pages/admin";
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Stats />} />
+          <Route index element={<Dashboard />} />
 
           <Route path="buy-airtime" element={<BuyAirtime />} />
           <Route path="buy-data" element={<BuyData />} />
@@ -46,8 +46,7 @@ function App() {
             </IsAdmin>
           }
         >
-          {/* <Route index element={<Admin />} /> */}
-          <Route path="users" element={<MyUsers />} />
+          {/* <Route path="users" element={<MyUsers />} /> */}
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/landing" element={<Landing />} />
