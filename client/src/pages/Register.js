@@ -8,16 +8,34 @@ const initialState = {
   email: "",
   password: "",
   isMember: true,
+  isForgetPassword: false,
 };
 
 const Register = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState(initialState);
-  const { user, isLoading, showAlert, displayAlert, setupUser } =
-    useAppContext();
+  const {
+    user,
+    isLoading,
+    showAlert,
+    displayAlert,
+    setupUser,
+    forgetPassword,
+  } = useAppContext();
 
   const toggleMember = () => {
-    setValues({ ...values, isMember: !values.isMember });
+    setValues({
+      ...values,
+      isMember: !values.isMember,
+      isForgetPassword: false,
+    });
+  };
+  const toggleForget = () => {
+    setValues({
+      ...values,
+      isForgetPassword: !values.isForgetPassword,
+      isMember: true,
+    });
   };
 
   const handleChange = (e) => {
@@ -25,18 +43,24 @@ const Register = () => {
   };
   const onSubmit = (e) => {
     e.preventDefault();
-    const { userName, email, password, isMember } = values;
-    if (!email || !password || (!isMember && !userName)) {
+    const { userName, email, password, isMember, isForgetPassword } = values;
+    if (
+      !email ||
+      (!password && !isForgetPassword) ||
+      (!isMember && !userName)
+    ) {
       displayAlert();
       return;
     }
     const currentUser = { userName, email, password };
-    if (isMember) {
+    if (isMember && !isForgetPassword) {
       setupUser({
         currentUser,
         endPoint: "login",
         alertText: "Login Successful! Redirecting...",
       });
+    } else if (isForgetPassword && isMember) {
+      forgetPassword(values.email);
     } else {
       setupUser({
         currentUser,
@@ -58,11 +82,17 @@ const Register = () => {
     <Wrapper className="full-page">
       <form className="form" onSubmit={onSubmit}>
         <Logo />
-        <h3>{values.isMember ? "Login" : "Register"}</h3>
+
+        {values.isForgetPassword ? (
+          <h3>Forget password</h3>
+        ) : (
+          <h3>{values.isMember ? "Login" : "Register"}</h3>
+        )}
         {showAlert && <Alert />}
         {/* name input */}
         {!values.isMember && (
           <FormRow
+            labelText="Username/business name"
             type="text"
             name="userName"
             value={values.userName}
@@ -78,12 +108,14 @@ const Register = () => {
           handleChange={handleChange}
         />
         {/* password input */}
-        <FormRow
-          type="password"
-          name="password"
-          value={values.password}
-          handleChange={handleChange}
-        />
+        {!values.isForgetPassword && (
+          <FormRow
+            type="password"
+            name="password"
+            value={values.password}
+            handleChange={handleChange}
+          />
+        )}
         <button type="submit" className="btn btn-block" disabled={isLoading}>
           submit
         </button>
@@ -93,6 +125,14 @@ const Register = () => {
             {values.isMember ? "Register" : "Login"}
           </button>
         </p>
+        {values.isMember && (
+          <p>
+            {values.isForgetPassword ? "Already a member?" : "Forget password?"}
+            <button type="button" className="member-btn" onClick={toggleForget}>
+              {values.isForgetPassword ? "Login" : "Click here"}
+            </button>
+          </p>
+        )}
       </form>
     </Wrapper>
   );

@@ -19,6 +19,9 @@ import {
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  FORGET_PASSWORD_BEGIN,
+  FORGET_PASSWORD_SUCCESS,
+  FORGET_PASSWORD_ERROR,
   HANDLE_CHANGE,
   CLEAR_VALUES,
   CREATE_JOB_BEGIN,
@@ -187,6 +190,27 @@ const reducer = (state, action) => {
       showAlert: true,
       alertText: action.payload.msg,
       alertType: "danger",
+    };
+  }
+  if (action.type === FORGET_PASSWORD_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+  if (action.type === FORGET_PASSWORD_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: action.payload.msg,
+    };
+  }
+  if (action.type === FORGET_PASSWORD_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
     };
   }
 

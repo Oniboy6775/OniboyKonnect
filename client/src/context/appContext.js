@@ -23,6 +23,9 @@ import {
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  FORGET_PASSWORD_BEGIN,
+  FORGET_PASSWORD_SUCCESS,
+  FORGET_PASSWORD_ERROR,
   HANDLE_CHANGE,
   CLEAR_VALUES,
   CREATE_JOB_BEGIN,
@@ -306,7 +309,20 @@ const AppProvider = ({ children }) => {
     }
     clearAlert();
   };
-
+  const forgetPassword = async (email) => {
+    dispatch({ type: FORGET_PASSWORD_BEGIN });
+    try {
+      const { data } = await authFetch.post("/auth/forgetPassword", { email });
+      console.log(data);
+      dispatch({ type: FORGET_PASSWORD_SUCCESS, payload: { msg: data.msg } });
+    } catch (error) {
+      dispatch({
+        type: FORGET_PASSWORD_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
   const handleChange = ({ name, value }) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
   };
@@ -430,6 +446,7 @@ const AppProvider = ({ children }) => {
         handleChange,
         buyAirtime,
         buyData,
+        forgetPassword,
         clearValues,
         createJob,
         getJobs,
