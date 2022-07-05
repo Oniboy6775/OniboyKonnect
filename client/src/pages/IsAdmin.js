@@ -3,9 +3,9 @@ import { useAppContext } from "../context/appContext";
 import { Navigate } from "react-router-dom";
 
 const IsAdmin = ({ children }) => {
-  const { isAdmin } = useAppContext();
+  const { isAdmin, token } = useAppContext();
 
-  if (!isAdmin) return <Navigate to="/" />;
+  if (!isAdmin || !token) return <Navigate to="/" />;
   return children;
 };
 

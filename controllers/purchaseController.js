@@ -9,7 +9,7 @@ import { BUY_AIRTIME, BUY_DATA } from "../apiCalls/index.js";
 import { BadRequestError } from "../errors/index.js";
 import Receipt from "../TransactionReceipt/receipt.js";
 import checkUserBalance from "../utils/checkUserBalance.js";
-import { dataPrices } from "../Mockdata/data.js";
+import dataPrices from "../Mockdata/data.js";
 
 const buyAirtime = async (req, res) => {
   const { amount, phoneNumber, networkId } = req.body;

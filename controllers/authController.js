@@ -9,9 +9,10 @@ import { StatusCodes } from "http-status-codes";
 
 // others
 import { BadRequestError, UnAuthenticatedError } from "../errors/index.js";
-import { dataPrices } from "../Mockdata/data.js";
+// import dataPrices from "../Mockdata/data.js";
 import sendEmail from "../utils/sendEmail.js";
 import generateAccountNumber from "../utils/generateAccountNumber.js";
+import Data from "../models/Data.js";
 
 const register = async (req, res) => {
   const { userName, email, password, userPin } = req.body;
@@ -32,6 +33,7 @@ const register = async (req, res) => {
   const token = user.createJWT();
   await generateAccountNumber({ email, userName });
   user = await User.findOne({ email });
+  const dataPrices = await Data.find();
   res.status(StatusCodes.CREATED).json({
     user: {
       email: user.email,
@@ -75,6 +77,7 @@ const login = async (req, res) => {
   }).sort("-createdAt");
   user = await User.findOne({ userName: email || userName });
   user.password = undefined;
+  const dataPrices = await Data.find();
   await res.status(StatusCodes.OK).json({
     user,
     token,
@@ -91,7 +94,7 @@ const fetchUser = async (req, res) => {
   const userTransactions = await Transaction.find({
     transBy: userId,
   }).sort("-createdAt");
-
+  const dataPrices = await Data.find();
   await res.status(StatusCodes.OK).json({
     user,
     token,

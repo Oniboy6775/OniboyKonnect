@@ -1,4 +1,4 @@
-export const dataPrices = [
+const dataPrices = [
   {
     planId: "500",
     networkId: "1",
@@ -63,3 +63,4 @@ export const dataPrices = [
     validity: "30 days",
   },
 ];
+export default dataPrices;

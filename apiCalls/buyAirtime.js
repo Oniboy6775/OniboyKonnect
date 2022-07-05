@@ -11,6 +11,8 @@ export const BUY_AIRTIME = async (phoneNumber, amount, network) => {
   const isNetworkAvailable = availableNetwork.hasOwnProperty(network);
   if (!isNetworkAvailable) return false;
   const selectedNetwork = availableNetwork[network];
+  console.log("here");
+
   const apiResponse = await axios.post(
     `${MY_API_URL}/buy/airtime`,
     {

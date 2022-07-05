@@ -68,7 +68,7 @@ const initialState = {
   transactions: [],
   amountToCharge: 0,
   airtimeDiscount: 98,
-  isAdmin: false,
+  isAdmin: true,
   // end here
   userLocation: userLocation || "",
   isEditing: false,

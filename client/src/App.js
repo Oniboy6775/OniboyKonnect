@@ -13,7 +13,8 @@ import {
   TvSub,
   Dashboard,
 } from "./pages/dashboard";
-import { Admin } from "./pages/admin";
+import { Admin } from "./admin";
+import { AdminDashboard, MyUsers, Transactions } from "./admin/pages";
 
 function App() {
   return (
@@ -46,7 +47,9 @@ function App() {
             </IsAdmin>
           }
         >
-          {/* <Route path="users" element={<MyUsers />} /> */}
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<MyUsers />} />
+          <Route path="transactions" element={<Transactions />} />
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/landing" element={<Landing />} />
