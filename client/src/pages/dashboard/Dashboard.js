@@ -23,39 +23,7 @@ const Dashboard = () => {
     { name: "History", image: "history.png", link: "/profile/transactions" },
     { name: "withdraw", image: "withdraw.png", link: "/profile/dashboard" },
   ];
-  const conditionalCellStyles = [
-    {
-      when: (row) => row.balanceAfter < row.balanceBefore,
 
-      style: {
-        backgroundColor: "var(--green-light) ",
-        // color: "white",
-        "&:hover": {
-          cursor: "pointer",
-        },
-      },
-    },
-    {
-      when: (row) => row.balanceAfter > row.balanceBefore,
-      style: {
-        backgroundColor: "var(--red-light)",
-        // color: "white",
-        "&:hover": {
-          cursor: "pointer",
-        },
-      },
-    },
-    // {
-    //   when: (row) => (row.balanceAfter = row.balanceBefore),
-    //   style: {
-    //     backgroundColor: "white",
-    //     color: "white",
-    //     "&:hover": {
-    //       cursor: "not-allowed",
-    //     },
-    //   },
-    // },
-  ];
   const columns = [
     {
       name: "NETWORK",
