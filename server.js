@@ -29,6 +29,7 @@ import fundwalletRouter from "./routes/fundwalletRoutes.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import authenticateUser from "./middleware/auth.js";
+import isAdmin from "./middleware/isAdmin.js";
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
@@ -48,7 +49,7 @@ app.use(cors());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/fundwallet", fundwalletRouter);
 app.use("/api/v1/purchase", authenticateUser, purchaseRouter);
-app.use("/api/v1/admin", authenticateUser, adminRouter);
+app.use("/api/v1/admin", authenticateUser, isAdmin, adminRouter);
 app.use("/api/v1/jobs", authenticateUser, jobsRouter);
 
 // only when ready to deploy

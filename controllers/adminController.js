@@ -16,16 +16,12 @@ import {
 import { StatusCodes } from "http-status-codes";
 
 const adminDetails = async (req, res) => {
-  const isAdmin = req.user.userId === process.env.ADMIN_ID;
-
-  if (!isAdmin)
-    throw new UnAuthenticatedError("Only Admin can access this routes");
   const servicesAvailable = await Admin.findOne();
   // Available admin balance
   // Registered users
   const myUsers = await User.find();
   // users transactions
-  const userTransactions = await Transaction.find();
+  const userTransactions = await Transaction.find().sort("-createdAt");
   // All data prices
   const dataPrices = await Data.find();
   const adminInfo = {
@@ -37,13 +33,10 @@ const adminDetails = async (req, res) => {
   res.status(StatusCodes.OK).json({ adminInfo });
 };
 const updateAvailableServices = async (req, res) => {
-  const isAdmin = req.user.userId === process.env.ADMIN_ID;
   const body = {
     isCableTvAvailable: false,
     isAirtelCgAvailable: false,
   };
-  if (!isAdmin)
-    throw new UnAuthenticatedError("Only Admin can access this routes");
 
   await Admin.updateOne({}, { $set: { ...body } });
   const updatedAvailableService = await Admin.findOne();
@@ -51,11 +44,8 @@ const updateAvailableServices = async (req, res) => {
   res.send(updatedAvailableService);
 };
 const updatePrices = async (req, res) => {
-  const isAdmin = req.user.userId === process.env.ADMIN_ID;
   const { dataId, newPrice } = req.body;
 
-  if (!isAdmin)
-    throw new UnAuthenticatedError("Only Admin can access this routes");
   const updatedDataPrice = await Data.updateOne(
     { _id: dataId },
     { ...newPrice }
@@ -65,11 +55,8 @@ const updatePrices = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "Data price updated " });
 };
 const validateUser = async (req, res) => {
-  const isAdmin = req.user.userId === process.env.ADMIN_ID;
   const { userAccount } = req.body;
 
-  if (!isAdmin)
-    throw new UnAuthenticatedError("Only Admin can access this routes");
   let user = await User.findOne({ userName: userAccount });
   if (!user) user = await User.findOne({ email: userAccount });
   if (!user) throw new NotFoundError("User does not exist");
@@ -77,11 +64,8 @@ const validateUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: `${userName}(${email})` });
 };
 const fundUserWallet = async (req, res) => {
-  const isAdmin = req.user.userId === process.env.ADMIN_ID;
   const { userAccount, amount } = req.body;
 
-  if (!isAdmin)
-    throw new UnAuthenticatedError("Only Admin can access this routes");
   if (!userAccount || !amount)
     throw new BadRequestError("Please enter all value");
   let user = await User.findOne({ userName: userAccount });
@@ -106,8 +90,6 @@ const fundUserWallet = async (req, res) => {
     .json({ msg: `You have successfully send ${amount} to ${userName}` });
 };
 const generateCoupon = async (req, res) => {
-  if (req.user.userId !== process.env.ADMIN_ID)
-    throw new BadRequestError("You are not authorized to perform this action");
   const { userAccount, amount } = req.body;
   const couponCode = voucher_codes.generate({
     length: 10,
@@ -128,7 +110,28 @@ const generateCoupon = async (req, res) => {
   const savedCoupon = await newCoupon.save();
   return res.status(200).json(savedCoupon);
 };
+const fetchTransactions = async (req, res) => {
+  const { userName, number } = req.query;
+  const queryObject = {};
+  if (userName) {
+    const { _id: userId } = await User.findOne({
+      userName: { $regex: userName, $options: "i" },
+    });
 
+    queryObject.transBy = userId;
+  }
+  if (number) queryObject.transNumber = { $regex: number, $options: "i" };
+  const transactions = await Transaction.find(queryObject).sort("-createdAt");
+  res.status(StatusCodes.OK).json({ total: transactions.length, transactions });
+};
+const fetchUsers = async (req, res) => {
+  const { balance, userName } = req.query;
+  const queryObject = {};
+  if (balance) queryObject.userBalance = { $lt: balance };
+  if (userName) queryObject.userName = { $regex: userName, $options: "i" };
+  const users = await User.find(queryObject).sort("-createdAt");
+  res.status(StatusCodes.OK).json({ users });
+};
 export {
   generateCoupon,
   adminDetails,
@@ -136,4 +139,6 @@ export {
   updatePrices,
   validateUser,
   fundUserWallet,
+  fetchTransactions,
+  fetchUsers,
 };

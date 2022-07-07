@@ -13,7 +13,7 @@ const FundUserWallet = () => {
     validateUser,
     isLoading,
     showAlert,
-    FundUserWallet,
+    fundUserWallet,
   } = useAppContext();
   const handleTransferFundChange = (e) => {
     e.preventDefault();
@@ -22,7 +22,7 @@ const FundUserWallet = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isValidated) return validateUser();
-    FundUserWallet();
+    fundUserWallet();
   };
   return (
     <Wrapper>

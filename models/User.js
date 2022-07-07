@@ -50,6 +50,10 @@ const UserSchema = new mongoose.Schema({
     default: Date.now,
     // expires: 2592000, // this is the expiry time in seconds(expires in month time)
   },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 UserSchema.pre("save", async function () {

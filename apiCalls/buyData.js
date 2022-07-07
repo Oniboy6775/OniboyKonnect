@@ -4,12 +4,20 @@ export const BUY_DATA = async (phoneNumber, planId, network) => {
   const { MY_API_URL, MY_API_PIN, MY_API_KEY } = process.env;
 
   const availablePlan = {
-    500: "1",
-    1000: "2",
-    2000: "3",
-    3000: "4",
-    5000: "5",
-    10000: "24",
+    1: "1",
+    2: "2",
+    3: "3",
+    4: "4",
+    5: "5",
+    // CG
+    6: "6",
+    7: "7",
+    8: "8",
+    9: "9",
+    10: "10",
+    11: "11",
+    12: "12",
+    13: "13",
   };
   const isPlanExist = availablePlan.hasOwnProperty(planId);
   if (!isPlanExist) throw new BadRequestError("The plan does not exist");

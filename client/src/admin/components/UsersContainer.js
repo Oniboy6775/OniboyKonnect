@@ -3,48 +3,56 @@ import { FaUser } from "react-icons/fa";
 import styled from "styled-components";
 import { useAppContext } from "../../context/appContext";
 import Loading from "../../components/Loading";
+import moment from "moment";
 const UsersContainer = () => {
   const { myUsers, isLoading } = useAppContext();
   return (
     <Wrapper>
-      {isLoading && <Loading center />}
-      {myUsers.map((e, index) => {
-        return (
-          <div key={index} className="each__user">
-            <header>
-              <div className="main-icon">{e.userName.charAt(0)}</div>
-              <div className="info">
-                <h5 className="">{e.userName}</h5>
-                <p className="">Member since: 12 jul 2002</p>
+      {isLoading ? (
+        <Loading center />
+      ) : (
+        <>
+          {myUsers.map((e, index) => {
+            return (
+              <div key={index} className="each__user">
+                <header>
+                  <div className="main-icon">{e.userName.charAt(0)}</div>
+                  <div className="info">
+                    <h5 className="">{e.userName}</h5>
+                    <p className="">
+                      Member since: {moment(e.createdAt).format("llll")}
+                    </p>
+                  </div>
+                </header>
+                <div className="content">
+                  <div className="user__info">
+                    <span className="icon">
+                      <FaUser />
+                    </span>
+                    <span className="text">₦{e.userBalance.toFixed(2)}</span>
+                  </div>
+                  <div className="user__info">
+                    <span className="icon">
+                      <FaUser />
+                    </span>
+                    <span className="text">{e.userType}</span>
+                  </div>
+                  <div className="user__info">
+                    <span className="icon">
+                      <FaUser />
+                    </span>
+                    <span className="text">{e.email}</span>
+                  </div>
+                </div>
+                <footer className="footer">
+                  <button className="btn delete-btn">Delete user</button>
+                  <button className="btn">Transactions</button>
+                </footer>
               </div>
-            </header>
-            <div className="content">
-              <div className="user__info">
-                <span className="icon">
-                  <FaUser />
-                </span>
-                <span className="text">₦{e.userBalance.toFixed(2)}</span>
-              </div>
-              <div className="user__info">
-                <span className="icon">
-                  <FaUser />
-                </span>
-                <span className="text">{e.userType}</span>
-              </div>
-              <div className="user__info">
-                <span className="icon">
-                  <FaUser />
-                </span>
-                <span className="text">{e.email}</span>
-              </div>
-            </div>
-            <footer className="footer">
-              <button className="btn delete-btn">Delete user</button>
-              <button className="btn">Transactions</button>
-            </footer>
-          </div>
-        );
-      })}
+            );
+          })}
+        </>
+      )}
     </Wrapper>
   );
 };

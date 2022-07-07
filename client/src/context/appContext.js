@@ -18,6 +18,7 @@ import {
   BUY_DATA_BEGIN,
   BUY_DATA_SUCCESS,
   BUY_DATA_ERROR,
+  // ADMIN
   FETCH_ADMIN_BEGIN,
   FETCH_ADMIN_SUCCESS,
   UPDATE_PRICE_BEGIN,
@@ -26,6 +27,12 @@ import {
   VALIDATE_USER_BEGIN,
   VALIDATE_USER_SUCCESS,
   VALIDATE_USER_ERROR,
+  SEARCH_USER_TRANSACTION_BEGIN,
+  SEARCH_USER_TRANSACTION_SUCCESS,
+  SEARCH_USER_TRANSACTION_ERROR,
+  FETCH_USERS_BEGIN,
+  FETCH_USERS_SUCCESS,
+  FETCH_USERS_ERROR,
   TOGGLE_SIDEBAR,
   LOGOUT_USER,
   UPDATE_USER_BEGIN,
@@ -78,9 +85,10 @@ const initialState = {
   transactions: [],
   amountToCharge: 0,
   airtimeDiscount: 98,
-  isAdmin: true,
+  isAdmin: false,
   // ADMIN
   userAccount: "",
+  userSearchBalance: "",
   isValidated: false,
   validatedName: "",
   userTransactions: [],
@@ -384,7 +392,7 @@ const AppProvider = ({ children }) => {
     }
     clearAlert();
   };
-  const FundUserWallet = async () => {
+  const fundUserWallet = async () => {
     const { amount, userAccount } = state;
     if (!amount || !userAccount) return displayAlert();
     dispatch({ type: FUND_USER_WALLET_BEGIN });
@@ -401,6 +409,38 @@ const AppProvider = ({ children }) => {
       });
     }
     clearAlert();
+  };
+  const fetchUserTransaction = async () => {
+    const { isAdmin, search, userAccount } = state;
+    let endPont = "/admin/fetchTransactions?";
+    if (!isAdmin) return;
+    if (search) endPont = `${endPont}number=${search}`;
+    if (userAccount) endPont = endPont + `&userName=${userAccount}`;
+    dispatch({ type: SEARCH_USER_TRANSACTION_BEGIN });
+    try {
+      const { data } = await authFetch(endPont);
+      console.log(data.transactions);
+      dispatch({
+        type: SEARCH_USER_TRANSACTION_SUCCESS,
+        payload: { transactions: data.transactions },
+      });
+    } catch (error) {
+      dispatch({ type: SEARCH_USER_TRANSACTION_ERROR });
+    }
+  };
+  const fetchUsers = async () => {
+    const { userAccount, userSearchBalance } = state;
+    let endPoint = "/admin/fetchUsers?";
+    if (userAccount) endPoint = `${endPoint}userName=${userAccount}`;
+    if (userSearchBalance)
+      endPoint = `${endPoint}&balance=${userSearchBalance}`;
+    dispatch({ type: FETCH_USERS_BEGIN });
+    try {
+      const { data } = await authFetch(endPoint);
+      dispatch({ type: FETCH_USERS_SUCCESS, payload: { users: data.users } });
+    } catch (error) {
+      dispatch({ type: FETCH_USERS_ERROR });
+    }
   };
   const handleChange = ({ name, value }) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
@@ -523,13 +563,16 @@ const AppProvider = ({ children }) => {
         logoutUser,
         updateUser,
         validateUser,
+
         handleChange,
         buyAirtime,
         buyData,
         forgetPassword,
         fetchAdmin,
         updatePrice,
-        FundUserWallet,
+        fundUserWallet,
+        fetchUserTransaction,
+        fetchUsers,
         clearValues,
         createJob,
         getJobs,

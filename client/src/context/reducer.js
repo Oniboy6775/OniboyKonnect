@@ -14,6 +14,7 @@ import {
   BUY_DATA_BEGIN,
   BUY_DATA_SUCCESS,
   BUY_DATA_ERROR,
+  // ADMIN
   FETCH_ADMIN_BEGIN,
   FETCH_ADMIN_SUCCESS,
   UPDATE_PRICE_BEGIN,
@@ -22,6 +23,12 @@ import {
   VALIDATE_USER_BEGIN,
   VALIDATE_USER_SUCCESS,
   VALIDATE_USER_ERROR,
+  SEARCH_USER_TRANSACTION_BEGIN,
+  SEARCH_USER_TRANSACTION_SUCCESS,
+  SEARCH_USER_TRANSACTION_ERROR,
+  FETCH_USERS_BEGIN,
+  FETCH_USERS_SUCCESS,
+  FETCH_USERS_ERROR,
   TOGGLE_SIDEBAR,
   LOGOUT_USER,
   UPDATE_USER_BEGIN,
@@ -319,6 +326,45 @@ const reducer = (state, action) => {
       alertType: "danger",
     };
   }
+
+  if (action.type === SEARCH_USER_TRANSACTION_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    };
+  }
+  if (action.type === SEARCH_USER_TRANSACTION_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      userTransactions: action.payload.transactions,
+    };
+  }
+  if (action.type === SEARCH_USER_TRANSACTION_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+    };
+  }
+  if (action.type === FETCH_USERS_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    };
+  }
+  if (action.type === FETCH_USERS_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      myUsers: action.payload.users,
+    };
+  }
+  if (action.type === FETCH_USERS_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+    };
+  }
   //  END
   if (action.type === TOGGLE_SIDEBAR) {
     return {
@@ -369,7 +415,12 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === CLEAR_VALUES) {
-    let initialState;
+    let initialState = {
+      userAccount: "",
+      amount: "",
+      search: "",
+      userSearchBalance: "",
+    };
     // const initialState = {
     //   isEditing: false,
     //   editJobId: "",
