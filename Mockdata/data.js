@@ -30,7 +30,7 @@ const dataPrices = [
     planId: "3000",
     networkId: "1",
     networkName: "MTN",
-    dataVolume: "2GB",
+    dataVolume: "3GB",
     price: "750",
     resellerPrice: "705",
     validity: "30 days",

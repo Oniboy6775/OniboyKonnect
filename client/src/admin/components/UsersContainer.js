@@ -1,109 +1,50 @@
 import React from "react";
 import { FaUser } from "react-icons/fa";
 import styled from "styled-components";
-
+import { useAppContext } from "../../context/appContext";
+import Loading from "../../components/Loading";
 const UsersContainer = () => {
+  const { myUsers, isLoading } = useAppContext();
   return (
     <Wrapper>
-      <div className="each__user">
-        <header>
-          <div className="main-icon">A</div>
-          <div className="info">
-            <h5 className="">username</h5>
-            <p className="">Member since: 12 jul 2002</p>
+      {isLoading && <Loading center />}
+      {myUsers.map((e, index) => {
+        return (
+          <div key={index} className="each__user">
+            <header>
+              <div className="main-icon">{e.userName.charAt(0)}</div>
+              <div className="info">
+                <h5 className="">{e.userName}</h5>
+                <p className="">Member since: 12 jul 2002</p>
+              </div>
+            </header>
+            <div className="content">
+              <div className="user__info">
+                <span className="icon">
+                  <FaUser />
+                </span>
+                <span className="text">₦{e.userBalance.toFixed(2)}</span>
+              </div>
+              <div className="user__info">
+                <span className="icon">
+                  <FaUser />
+                </span>
+                <span className="text">{e.userType}</span>
+              </div>
+              <div className="user__info">
+                <span className="icon">
+                  <FaUser />
+                </span>
+                <span className="text">{e.email}</span>
+              </div>
+            </div>
+            <footer className="footer">
+              <button className="btn delete-btn">Delete user</button>
+              <button className="btn">Transactions</button>
+            </footer>
           </div>
-        </header>
-        <div className="content">
-          <div className="user__info">
-            <span className="icon">
-              <FaUser />
-            </span>
-            <span className="text">#3000</span>
-          </div>
-          <div className="user__info">
-            <span className="icon">
-              <FaUser />
-            </span>
-            <span className="text">#3000</span>
-          </div>
-          <div className="user__info">
-            <span className="icon">
-              <FaUser />
-            </span>
-            <span className="text">onisabiabdullahi@gmail.com</span>
-          </div>
-        </div>
-        <footer className="footer">
-          <button className="btn delete-btn">Delete user</button>
-          <button className="btn">Transactions</button>
-        </footer>
-      </div>
-      <div className="each__user">
-        <header>
-          <div className="main-icon">A</div>
-          <div className="info">
-            <h5 className="">username</h5>
-            <p className="">Member since: 12 jul 2002</p>
-          </div>
-        </header>
-        <div className="content">
-          <div className="user__info">
-            <span className="icon">
-              <FaUser />
-            </span>
-            <span className="text">#3000</span>
-          </div>
-          <div className="user__info">
-            <span className="icon">
-              <FaUser />
-            </span>
-            <span className="text">#3000</span>
-          </div>
-          <div className="user__info">
-            <span className="icon">
-              <FaUser />
-            </span>
-            <span className="text">onisabiabdullahi@gmail.com</span>
-          </div>
-        </div>
-        <footer className="footer">
-          <button className="btn delete-btn">Delete user</button>
-          <button className="btn">Transactions</button>
-        </footer>
-      </div>
-      <div className="each__user">
-        <header>
-          <div className="main-icon">A</div>
-          <div className="info">
-            <h5 className="">username</h5>
-            <p className="">Member since: 12 jul 2002</p>
-          </div>
-        </header>
-        <div className="content">
-          <div className="user__info">
-            <span className="icon">
-              <FaUser />
-            </span>
-            <span className="text">#3000</span>
-          </div>
-          <div className="user__info">
-            <span className="icon">
-              <FaUser />
-            </span>
-            <span className="text">#3000</span>
-          </div>
-          <div className="user__info">
-            <span className="icon">
-              <FaUser />
-            </span>
-            <span className="text">onisabiabdullahi@gmail.com</span>
-          </div>
-        </div>
-        <footer className="footer">
-          <button className="btn delete-btn">Delete user</button>
-          <button className="btn">Transactions</button>
-        </footer>
-      </div>
+        );
+      })}
     </Wrapper>
   );
 };
@@ -196,11 +137,10 @@ const Wrapper = styled.article`
   }
 
   footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    /* border: 2px solid red; */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    place-items: center;
+    margin-bottom: 1rem;
   }
   .edit-btn,
   .delete-btn {

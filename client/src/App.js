@@ -14,7 +14,14 @@ import {
   Dashboard,
 } from "./pages/dashboard";
 import { Admin } from "./admin";
-import { AdminDashboard, MyUsers, Transactions } from "./admin/pages";
+import {
+  AdminDashboard,
+  MyUsers,
+  Transactions,
+  Prices,
+  FundUserWallet,
+} from "./admin/pages";
+// import Prices from "./admin/pages/Prices";
 
 function App() {
   return (
@@ -47,9 +54,11 @@ function App() {
             </IsAdmin>
           }
         >
-          <Route index element={<AdminDashboard />} />
-          <Route path="users" element={<MyUsers />} />
+          {/* <Route element={<AdminDashboard />} /> */}
+          <Route index element={<MyUsers />} />
           <Route path="transactions" element={<Transactions />} />
+          <Route path="prices" element={<Prices />} />
+          <Route path="fund-user-wallet" element={<FundUserWallet />} />
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/landing" element={<Landing />} />

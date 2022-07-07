@@ -18,6 +18,14 @@ import {
   BUY_DATA_BEGIN,
   BUY_DATA_SUCCESS,
   BUY_DATA_ERROR,
+  FETCH_ADMIN_BEGIN,
+  FETCH_ADMIN_SUCCESS,
+  UPDATE_PRICE_BEGIN,
+  UPDATE_PRICE_SUCCESS,
+  UPDATE_PRICE_ERROR,
+  VALIDATE_USER_BEGIN,
+  VALIDATE_USER_SUCCESS,
+  VALIDATE_USER_ERROR,
   TOGGLE_SIDEBAR,
   LOGOUT_USER,
   UPDATE_USER_BEGIN,
@@ -42,8 +50,10 @@ import {
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
   CHANGE_PAGE,
+  FUND_USER_WALLET_BEGIN,
+  FUND_USER_WALLET_SUCCESS,
+  FUND_USER_WALLET_ERROR,
 } from "./actions";
-import { useNavigate } from "react-router-dom";
 
 const token = localStorage.getItem("token");
 const user = localStorage.getItem("user");
@@ -69,6 +79,16 @@ const initialState = {
   amountToCharge: 0,
   airtimeDiscount: 98,
   isAdmin: true,
+  // ADMIN
+  userAccount: "",
+  isValidated: false,
+  validatedName: "",
+  userTransactions: [],
+  myUsers: [],
+  dataPrices: [],
+  availableServices: {},
+  newPrice: "",
+  newResellerPrice: "",
   // end here
   userLocation: userLocation || "",
   isEditing: false,
@@ -100,7 +120,8 @@ const AppProvider = ({ children }) => {
 
   // axios
   const authFetch = axios.create({
-    baseURL: "https://oniboykonnect.herokuapp.com/api/v1",
+    // baseURL: "https://oniboykonnect.herokuapp.com/api/v1",
+    baseURL: "/api/v1",
   });
   // request
 
@@ -282,7 +303,16 @@ const AppProvider = ({ children }) => {
     }
     clearAlert();
   };
-
+  const fetchAdmin = async () => {
+    dispatch({ type: FETCH_ADMIN_BEGIN });
+    try {
+      const { data } = await authFetch.get("/admin");
+      // console.log(data.adminInfo);
+      dispatch({ type: FETCH_ADMIN_SUCCESS, payload: data.adminInfo });
+    } catch (error) {
+      logoutUser();
+    }
+  };
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
     removeUserFromLocalStorage();
@@ -319,6 +349,55 @@ const AppProvider = ({ children }) => {
       dispatch({
         type: FORGET_PASSWORD_ERROR,
         payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
+  const updatePrice = async (dataId) => {
+    const { newPrice, newResellerPrice } = state;
+    if (!newPrice || !newResellerPrice) return displayAlert();
+    dispatch({ type: UPDATE_PRICE_BEGIN });
+
+    try {
+      const { data } = await authFetch.post("/admin/updatePrices", {
+        dataId,
+        newPrice: { price: newPrice, resellerPrice: newResellerPrice },
+      });
+      dispatch({ type: UPDATE_PRICE_SUCCESS, payload: { msg: data.msg } });
+      fetchAdmin();
+    } catch (error) {
+      dispatch({ type: UPDATE_PRICE_ERROR, payload: error.response.data.msg });
+    }
+    clearAlert();
+  };
+  const validateUser = async () => {
+    const { userAccount } = state;
+    if (!userAccount) return displayAlert();
+    dispatch({ type: VALIDATE_USER_BEGIN });
+    try {
+      const { data } = await authFetch.post("/admin/validateUser", {
+        userAccount,
+      });
+      dispatch({ type: VALIDATE_USER_SUCCESS, payload: { msg: data.msg } });
+    } catch (error) {
+      dispatch({ type: VALIDATE_USER_ERROR, payload: error.response.data.msg });
+    }
+    clearAlert();
+  };
+  const FundUserWallet = async () => {
+    const { amount, userAccount } = state;
+    if (!amount || !userAccount) return displayAlert();
+    dispatch({ type: FUND_USER_WALLET_BEGIN });
+    try {
+      const { data } = await authFetch.post("/admin/fundWallet", {
+        amount,
+        userAccount,
+      });
+      dispatch({ type: FUND_USER_WALLET_SUCCESS, payload: { msg: data.msg } });
+    } catch (error) {
+      dispatch({
+        type: FUND_USER_WALLET_ERROR,
+        payload: error.response.data.msg,
       });
     }
     clearAlert();
@@ -443,10 +522,14 @@ const AppProvider = ({ children }) => {
         toggleSidebar,
         logoutUser,
         updateUser,
+        validateUser,
         handleChange,
         buyAirtime,
         buyData,
         forgetPassword,
+        fetchAdmin,
+        updatePrice,
+        FundUserWallet,
         clearValues,
         createJob,
         getJobs,

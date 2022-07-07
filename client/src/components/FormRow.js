@@ -1,10 +1,19 @@
-const FormRow = ({ type, name, value, handleChange, labelText, disabled }) => {
+const FormRow = ({
+  type,
+  name,
+  value,
+  handleChange,
+  labelText,
+  disabled,
+  placeholder,
+}) => {
   return (
     <div className="form-row">
       <label htmlFor={name} className="form-label">
         {labelText || name}
       </label>
       <input
+        placeholder={placeholder}
         disabled={disabled}
         type={type}
         value={value}

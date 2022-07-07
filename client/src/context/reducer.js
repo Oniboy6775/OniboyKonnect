@@ -14,6 +14,14 @@ import {
   BUY_DATA_BEGIN,
   BUY_DATA_SUCCESS,
   BUY_DATA_ERROR,
+  FETCH_ADMIN_BEGIN,
+  FETCH_ADMIN_SUCCESS,
+  UPDATE_PRICE_BEGIN,
+  UPDATE_PRICE_SUCCESS,
+  UPDATE_PRICE_ERROR,
+  VALIDATE_USER_BEGIN,
+  VALIDATE_USER_SUCCESS,
+  VALIDATE_USER_ERROR,
   TOGGLE_SIDEBAR,
   LOGOUT_USER,
   UPDATE_USER_BEGIN,
@@ -38,6 +46,9 @@ import {
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
   CHANGE_PAGE,
+  FUND_USER_WALLET_BEGIN,
+  FUND_USER_WALLET_SUCCESS,
+  FUND_USER_WALLET_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -121,7 +132,7 @@ const reducer = (state, action) => {
       )[0],
     };
   }
-
+  // START
   if (action.type === BUY_AIRTIME_BEGIN) {
     return {
       ...state,
@@ -213,7 +224,102 @@ const reducer = (state, action) => {
       alertText: action.payload.msg,
     };
   }
-
+  if (action.type === FETCH_ADMIN_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+  if (action.type === FETCH_ADMIN_SUCCESS) {
+    const adminInfo = action.payload;
+    return { ...state, isLoading: false, ...adminInfo };
+  }
+  if (action.type === UPDATE_PRICE_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+      showAlert: true,
+      alertText: "Updating...",
+      alertType: "danger",
+    };
+  }
+  if (action.type === UPDATE_PRICE_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertText: action.payload.msg,
+      alertType: "success",
+      newPrice: "",
+      newResellerPrice: "",
+    };
+  }
+  if (action.type === UPDATE_PRICE_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertText: action.payload,
+      alertType: "danger",
+    };
+  }
+  if (action.type === VALIDATE_USER_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+      showAlert: true,
+      alertText: "validating...",
+      alertType: "danger",
+    };
+  }
+  if (action.type === VALIDATE_USER_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertText: "Validated",
+      alertType: "success",
+      isValidated: true,
+      validatedName: action.payload.msg,
+    };
+  }
+  if (action.type === VALIDATE_USER_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertText: action.payload,
+      alertType: "danger",
+    };
+  }
+  if (action.type === FUND_USER_WALLET_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+      showAlert: true,
+      alertText: "Funding wallet...",
+      alertType: "danger",
+    };
+  }
+  if (action.type === FUND_USER_WALLET_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertText: action.payload.msg,
+      alertType: "success",
+      userAccount: "",
+      validatedName: "",
+      isValidated: false,
+    };
+  }
+  if (action.type === FUND_USER_WALLET_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertText: action.payload,
+      alertType: "danger",
+    };
+  }
+  //  END
   if (action.type === TOGGLE_SIDEBAR) {
     return {
       ...state,
@@ -254,6 +360,7 @@ const reducer = (state, action) => {
       alertText: action.payload.msg,
     };
   }
+
   if (action.type === HANDLE_CHANGE) {
     return {
       ...state,

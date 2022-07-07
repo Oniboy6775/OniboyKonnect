@@ -1,11 +1,11 @@
 import React from "react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
-import { FormRow, FormRowSelect } from "../../components";
+import { FormRow } from "../../components";
 import { useAppContext } from "../../context/appContext";
 import moment from "moment";
 const Transactions = () => {
-  const { search, handleChange, transactions } = useAppContext();
+  const { search, handleChange, userTransactions } = useAppContext();
   const handleSearch = (e) => {
     e.preventDefault();
     handleChange({ name: e.target.name, value: e.target.value });
@@ -59,7 +59,7 @@ const Transactions = () => {
       <div className="table">
         <DataTable
           columns={columns}
-          data={transactions}
+          data={userTransactions}
           pagination
           highlightOnHover
           pointerOnHover

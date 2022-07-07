@@ -4,14 +4,19 @@ import { FaPhone, FaGlobe, FaMoneyBill, FaMoneyBillAlt } from "react-icons/fa";
 import { ImProfile } from "react-icons/im";
 
 const links = [
-  { id: 1, text: "Dashboard", path: "/admin", icon: <IoBarChartSharp /> },
+  // { id: 1, text: "Dashboard", path: "/admin", icon: <IoBarChartSharp /> },
   {
     id: 2,
     text: "Users",
-    path: "/admin/users",
+    path: "/admin",
     icon: <IoPersonCircle />,
   },
-  { id: 3, text: "fund wallet", path: "/admin/fund-wallet", icon: <FaGlobe /> },
+  {
+    id: 3,
+    text: "fund user wallet",
+    path: "/admin/fund-user-wallet",
+    icon: <FaGlobe />,
+  },
   {
     id: 4,
     text: "Transactions",
@@ -19,7 +24,6 @@ const links = [
     icon: <FaMoneyBillAlt />,
   },
   { id: 5, text: "Prices", path: "/admin/prices", icon: <MdMonitor /> },
- 
 ];
 
 export default links;
